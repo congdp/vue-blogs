@@ -12,13 +12,15 @@ import Table from './Table.vue'
 export default {
   components: { Table },
   name: 'List',
-
   data() {
     return {
       dataBlogs: [],
     }
   },
-  methods: {
+  methods: { 
+    /**
+     * get list blog
+     */
     getData() {
       axios.get('http://localhost:4000/blogs').then((res) => {
         this.dataBlogs = res.data

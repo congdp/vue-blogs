@@ -1,8 +1,5 @@
 <template>
-  <!-- <div> -->
-  <!-- <app-header/> -->
   <list />
-  <!-- </div> -->
 </template>
 
 <script>

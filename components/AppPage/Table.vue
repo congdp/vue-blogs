@@ -14,12 +14,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="blog in dataBlogs" :key="blog.id">
+        <tr v-for="(blog, index) in dataBlogs" :key="index">
           <th scope="row">{{ blog.id }}</th>
           <td>{{ blog.title }}</td>
-          <td>{{ blog.category }}</td>
+          <td>
+            <div v-for="(cate, index) in CATEGORY" :key="index">
+              <p v-if="index == blog.category">{{ cate }}</p>
+            </div>
+          </td>
           <td>{{ blog.public }}</td>
-          <td>{{ blog.position }}</td>
+          <td>{{ filterPosition(blog.position) }}</td>
           <td>{{ blog.data_pubblic }}</td>
           <td>
             <nuxt-link :to="`/blog/${blog.id}`"
@@ -29,7 +33,7 @@
           <td>
             <button
               class="btn btn-danger"
-              @click="deleteBlog(blog.id)"
+              @click="deleteBlog(index, blog.id)"
               onclick="return confirm('Bạn có muốn xóa ?')"
             >
               Delete
@@ -42,22 +46,43 @@
 </template>
 <script>
 import axios from 'axios'
+import { DATA_CATE } from '@/constants/constants.js'
+import { DATA_POS } from '@/constants/constants.js'
 export default {
   name: 'Table',
+  data() {
+    return {
+      CATEGORY: DATA_CATE,
+      POSITION: DATA_POS,
+    }
+  },
   props: {
     dataBlogs: {
       type: Array,
       default: () => [],
     },
+    getData: Function,
   },
   methods: {
-    deleteBlog(id) {
-      axios.delete("http://localhost:4000/blogs/" + id).then((res) => {
-        console.log("xoa thanh cong");
-        axios.get("http://localhost:4000/blogs").then((res) => {
-          this.dataBlogs = res.data;
-        });
-      });
+    /**
+     * delete blog
+     */
+    deleteBlog(index, id) {
+      axios.delete('http://localhost:4000/blogs/' + id).then((res) => {
+        console.log('xoa thanh cong')
+        this.dataBlogs.splice(index, 1)
+      })
+    },
+
+    /**
+     * get name position
+     */
+     filterPosition(pos) {
+      return pos
+        .map((item) => {
+          return this.POSITION[item];
+        })
+        .join(",");
     },
   },
 }

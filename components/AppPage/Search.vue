@@ -28,6 +28,9 @@ export default {
     Table,
   },
   methods: {
+    /**
+     * search blog
+     */
     searchBlog() {
       axios
         .get('http://localhost:4000/blogs' + '?title_like=' + this.search)

@@ -8,7 +8,6 @@
           src="https://digidinos.com/assets/images/logo.png"
         />
         </div>
-      <!-- </div> -->
       <div class="col-lg-9">
       <h2>Blogs Management</h2>
       </div>

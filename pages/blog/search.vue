@@ -1,9 +1,5 @@
 <template>
-
 <search/>
-<!-- <list/> -->
-
-
 </template>
 
 <script>

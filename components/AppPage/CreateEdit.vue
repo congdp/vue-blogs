@@ -1,7 +1,10 @@
 <template>
   <div class="col-lg-9">
     <h3>{{ title }}</h3>
-    <form class="w-50 mb-5">
+    <ul v-if="errors.length > 0" class="alert alert-danger">
+      <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+    </ul>
+    <div class="w-50 mb-5">
       <div class="form-group">
         <label for="title">Tiêu đề</label>
         <input
@@ -39,8 +42,8 @@
       <div class="mb-3">
         <label for="type">Loại</label> <br />
         <select name="type" id="type" v-model="form.category">
-          <option v-for="(cat, index) in CATEGORY" :key="index" :value="cat.id">
-            {{ cat.name }}
+          <option v-for="(cat, index) in CATEGORY" :key="index" :value="index">
+            {{ cat }}
           </option>
         </select>
       </div>
@@ -73,7 +76,7 @@
         <input
           class="form-check-input"
           type="radio"
-          v-bind:value="1"
+          v-bind:value="true"
           v-model="form.public"
         />
         <label class="form-check-label d-block" for="exampleRadios1">
@@ -82,7 +85,7 @@
         <input
           class="form-check-input"
           type="radio"
-          v-bind:value="2"
+          v-bind:value="false"
           v-model="form.public"
         />
         <label class="form-check-label" for="exampleRadios1"> No </label>
@@ -99,7 +102,7 @@
       <div class="active d-flex justify-content-center">
         <button
           class="btn btn-success mr-2"
-          @click="createBlog"
+          @click="createBlog()"
           v-if="title === 'New Blogs'"
         >
           Submit
@@ -114,31 +117,21 @@
         </button>
         <button class="btn btn-primary">Clear</button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-const CATEGORY = [
-  { id: 1, name: 'thời sự' },
-  { id: 2, name: 'thế giới' },
-  { id: 3, name: 'kinh doanh' },
-  { id: 4, name: 'giải trí' },
-  { id: 5, name: 'thời sự' },
-  { id: 6, name: 'thế giới' },
-  { id: 7, name: 'kinh doanh' },
-  { id: 8, name: 'giải trí' },
-  { id: 9, name: 'thời sự' },
-]
-const POSITION = ['Việt Nam', 'Châu Á', 'Châu Âu', 'Châu Mỹ']
+import { DATA_CATE } from '@/constants/constants.js'
+import { DATA_POS } from '@/constants/constants.js'
 export default {
   props: ['title'],
   name: 'New',
   data() {
     return {
-      CATEGORY,
-      POSITION,
+      CATEGORY :DATA_CATE,
+      POSITION:DATA_POS,
       form: {
         id: '',
         title: '',
@@ -150,29 +143,77 @@ export default {
         position: [],
         thumbs: '',
       },
+      errors: [],
     }
   },
   methods: {
+    /**
+     * create blog
+     */
     createBlog() {
-      axios.post('http://localhost:4000/blogs', this.form).then((res) => {
-        alert('thêm thành công')
-      })
-      this.$router.push('/blog/list')
+      this.validate()
+      if (this.errors.length > 0) {
+        return this.errors
+      } else {
+        axios.post('http://localhost:4000/blogs', this.form).then((res) => {
+          alert('them thanh cong')
+        })
+        this.$router.push('/blog')
+      }
     },
+
+    /**
+     * get blog by id
+     */
     getBlogByID(id) {
       axios
         .get('http://localhost:4000/blogs/' + id)
         .then((res) => (this.form = res.data))
     },
+
+    /**
+     * update blog
+     */
     updateBlog(id) {
-      axios.put('http://localhost:4000/blogs/' + id, this.form).then((res) => {
-        // alert('thêm thành công')
-      })
-      this.$router.push('/blog/list')
+      this.validate()
+      if (this.errors.length > 0) {
+        return this.errors
+      } else {
+        axios
+          .put('http://localhost:4000/blogs/' + id, this.form)
+          .then((res) => {
+            alert(' Sửa thành công')
+          })
+        this.$router.push('/blog')
+      }
+    },
+
+    /**
+     * check validate
+     */
+    validate() {
+      this.errors = []
+      if (this.form.title == '') {
+        this.errors.push('title không được trống')
+      }
+      if (this.form.des == '') {
+        this.errors.push('des không được trống')
+      }
+      if (this.form.detail == '') {
+        this.errors.push('deatil không được trống')
+      }
+      if (this.form.category == '') {
+        this.errors.push('category không được trống')
+      }
+      if (this.form.position == []) {
+        this.errors.push('position không được trống!')
+      }
     },
   },
   mounted() {
+    if (this.$route.params.id != null) {
       this.getBlogByID(this.$route.params.id)
+    }
   },
 }
 </script>

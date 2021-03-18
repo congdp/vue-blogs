@@ -1,8 +1,5 @@
 <template>
-  <!-- <div> -->
-  <!-- <app-header/> -->
   <create-edit :title="title" />
-  <!-- </div> -->
 </template>
 
 <script>
