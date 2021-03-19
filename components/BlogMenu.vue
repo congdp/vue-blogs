@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'AppMenu',
+  name: 'BlogMenu',
 }
 </script>
 <style>

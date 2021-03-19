@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div >
+    <h3>List Blogs</h3>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -33,7 +34,7 @@
           <td>
             <button
               class="btn btn-danger"
-              @click="deleteBlog(index, blog.id)"
+              @click="deleteBlog( blog.id)"
               onclick="return confirm('Bạn có muốn xóa ?')"
             >
               Delete
@@ -49,7 +50,7 @@ import axios from 'axios'
 import { DATA_CATE } from '@/constants/constants.js'
 import { DATA_POS } from '@/constants/constants.js'
 export default {
-  name: 'Table',
+  name: 'ListBlog',
   data() {
     return {
       CATEGORY: DATA_CATE,
@@ -61,16 +62,17 @@ export default {
       type: Array,
       default: () => [],
     },
-    getData: Function,
+    // getData: Function,
   },
   methods: {
     /**
      * delete blog
      */
-    deleteBlog(index, id) {
+    deleteBlog(id) {
       axios.delete('http://localhost:4000/blogs/' + id).then((res) => {
         console.log('xoa thanh cong')
-        this.dataBlogs.splice(index, 1)
+        // this.dataBlogs.splice(index, 1)
+        this.$emit('getListBlogs',this.dataBlogs)
       })
     },
 

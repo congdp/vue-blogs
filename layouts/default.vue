@@ -1,25 +1,21 @@
 <template>
   <div class="container">
     <div class="header my-3">
-      <app-header />
-
+      <blog-header />
     </div>
-    <div class="row ">
-      <app-menu/>
-       <Nuxt/>
+    <div class="row">
+      <blog-menu/>
+      <Nuxt />
     </div>
-   
   </div>
 </template>
 <script>
-import AppHeader from '../components/AppHeader.vue'
-import AppMenu from '../components/AppMenu.vue'
-// import List from '../components/AppPage/List.vue'
+import BlogHeader from '../components/BlogHeader.vue'
+import BlogMenu from '../components/BlogMenu.vue'
 export default {
   components: {
-    AppHeader,
-    AppMenu,
-    // AppP,
+    BlogHeader,
+    BlogMenu,
   },
 }
 </script>

@@ -2,7 +2,7 @@
   <create-edit :title="title" />
 </template>
 <script>
-import CreateEdit from '../../components/AppPage/CreateEdit'
+import CreateEdit from '../../components/Blogs/CreateEdit'
 export default {
   data() {
     return {

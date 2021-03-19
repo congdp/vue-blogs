@@ -16,6 +16,6 @@
 
 <script>
 export default {
-  name: 'AppHeader',
+  name: 'BlogHeader',
 }
 </script>

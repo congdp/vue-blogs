@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-9">
+  <div >
     <h3>Search Blog</h3>
     <div action="" class="mb-3">
       <div class="form-group row">
@@ -8,43 +8,28 @@
           <input type="text" class="form-control" v-model="search" id="title" />
         </div>
       </div>
-      <button class="btn btn-success" @click="searchBlog()">Search</button>
+      <button class="btn btn-success" @click="sendKeySearch()">Search</button>
     </div>
-    <Table :dataBlogs="listBlog" />
   </div>
 </template>
 <script>
 import axios from 'axios'
-import Table from './Table.vue'
 export default {
   name: 'Search',
   data() {
     return {
-      listBlog: [],
       search: '',
     }
   },
-  components: {
-    Table,
-  },
   methods: {
     /**
-     * search blog
+     * send key search to searchBlog()
      */
-    searchBlog() {
-      axios
-        .get('http://localhost:4000/blogs' + '?title_like=' + this.search)
-        .then((res) => {
-          this.listBlog = res.data
-          console.log(res.data)
-        })
+  sendKeySearch() {
+      this.$emit('getKeyWord',this.search);
     },
   },
 }
 </script>
 <style>
-.wp-list {
-  max-width: 100%;
-  padding-left: 0px;
-}
 </style>
