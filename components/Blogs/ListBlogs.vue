@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <h3>List Blogs</h3>
     <table class="table table-bordered">
       <thead>
@@ -18,12 +18,8 @@
         <tr v-for="(blog, index) in dataBlogs" :key="index">
           <th scope="row">{{ blog.id }}</th>
           <td>{{ blog.title }}</td>
-          <td>
-            <div v-for="(cate, index) in CATEGORY" :key="index">
-              <p v-if="index == blog.category">{{ cate }}</p>
-            </div>
-          </td>
-          <td>{{ blog.public }}</td>
+          <td>{{ filterCategory(blog.category) }}</td>
+          <td>{{ blog.public == true ? 'Public' : 'Private' }}</td>
           <td>{{ filterPosition(blog.position) }}</td>
           <td>{{ blog.data_pubblic }}</td>
           <td>
@@ -32,11 +28,7 @@
             >
           </td>
           <td>
-            <button
-              class="btn btn-danger"
-              @click="deleteBlog( blog.id)"
-              onclick="return confirm('Bạn có muốn xóa ?')"
-            >
+            <button class="btn btn-danger" @click="deleteBlog(blog.id)">
               Delete
             </button>
           </td>
@@ -47,44 +39,68 @@
 </template>
 <script>
 import axios from 'axios'
-import { DATA_CATE } from '@/constants/constants.js'
-import { DATA_POS } from '@/constants/constants.js'
+import { DATA_CATE, DATA_POS } from '@/constants/constants.js'
+import swal from 'sweetalert2'
 export default {
   name: 'ListBlog',
+  props: {
+    dataBlogs: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       CATEGORY: DATA_CATE,
       POSITION: DATA_POS,
     }
   },
-  props: {
-    dataBlogs: {
-      type: Array,
-      default: () => [],
-    },
-    // getData: Function,
-  },
   methods: {
     /**
      * delete blog
      */
     deleteBlog(id) {
-      axios.delete('http://localhost:4000/blogs/' + id).then((res) => {
-        console.log('xoa thanh cong')
-        // this.dataBlogs.splice(index, 1)
-        this.$emit('getListBlogs',this.dataBlogs)
-      })
+      swal
+        .fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            // swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+            axios.delete('http://localhost:4000/blogs/' + id).then((res) => {
+              this.$emit('getListBlogs', this.dataBlogs)
+            })
+            swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+          }
+        })
     },
 
     /**
      * get name position
      */
-     filterPosition(pos) {
+    filterPosition(pos) {
       return pos
         .map((item) => {
-          return this.POSITION[item];
+          return this.POSITION[item]
         })
-        .join(",");
+        .join(',')
+    },
+
+    /**
+     * get name category
+     */
+    filterCategory(id) {
+      return this.CATEGORY.find((cate, index) => {
+        if (index === id) {
+          return cate
+        }
+      })
     },
   },
 }

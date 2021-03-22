@@ -2,46 +2,46 @@
   <div class="col-lg-9">
     <h3>{{ title }}</h3>
     <ul v-if="errors.length > 0" class="alert alert-danger">
-      <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+      <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
     <div class="w-50 mb-5">
       <div class="form-group">
         <label for="title">Tiêu đề</label>
         <input
+          id="title"
+          v-model="form.title"
           type="text"
           class="form-control"
-          id="title"
           placeholder="Tiêu đề"
-          v-model="form.title"
         />
       </div>
       <div class="form-group">
-        <label for="desc">Mô tả</label>
+        <label for="desc">Mô tả ng</label>
         <input
+          id="desc"
+          v-model="form.des"
           type="text"
           class="form-control"
-          id="desc"
           placeholder="Mô tả"
-          v-model="form.des"
         />
       </div>
 
       <div class="form-group">
         <label for="detail">Chi tiết</label>
         <textarea
-          class="form-control"
           id="detail"
-          rows="3"
           v-model="form.detail"
+          class="form-control"
+          rows="7"
         ></textarea>
       </div>
       <div class="mb-3">
         <label for="thumb">Hình ảnh</label> <br />
-        <input type="file" id="thumb" />
+        <input id="thumb" type="file" />
       </div>
       <div class="mb-3">
         <label for="type">Loại</label> <br />
-        <select name="type" id="type" v-model="form.category">
+        <select id="type" v-model="form.category" name="type">
           <option v-for="(cat, index) in CATEGORY" :key="index" :value="index">
             {{ cat }}
           </option>
@@ -53,16 +53,16 @@
         <ul class="list-group list-group-flush list-unstyled">
           <li
             v-for="(post, key) in POSITION"
-            v-bind:key="post"
+            :key="post"
             class="list-group-control"
           >
             <div class="custom-control custom-checkbox">
               <input
+                :id="'check' + key"
+                v-model="form.position"
                 type="checkbox"
                 :value="key"
                 class="custom-control-input"
-                :id="'check' + key"
-                v-model="form.position"
               />
               <label class="custom-control-label" :for="'check' + key">{{
                 post
@@ -74,38 +74,38 @@
       <label for="" class="d-block mt-3">Public</label>
       <div class="form-check">
         <input
+          v-model="form.public"
           class="form-check-input"
           type="radio"
-          v-bind:value="true"
-          v-model="form.public"
+          :value="true"
         />
         <label class="form-check-label d-block" for="exampleRadios1">
           Yes
         </label>
         <input
+          v-model="form.public"
           class="form-check-input"
           type="radio"
-          v-bind:value="false"
-          v-model="form.public"
+          :value="false"
         />
         <label class="form-check-label" for="exampleRadios1"> No </label>
       </div>
       <div class="form-group mt-3">
         <label for="desc">Date Public</label>
         <input
-          type="date"
-          class="form-control w-50"
           id="desc"
           v-model="form.data_pubblic"
+          type="date"
+          class="form-control w-50"
         />
       </div>
       <div class="active d-flex justify-content-center">
         <button
+          v-if="title === 'New Blogs'"
           class="btn btn-success mr-2"
           @click="createBlog()"
-          v-if="title === 'New Blogs'"
         >
-          Submit
+          Save
         </button>
         <button
           v-if="title === 'Edit Blogs'"
@@ -115,7 +115,6 @@
         >
           Edit
         </button>
-        <button class="btn btn-primary">Clear</button>
       </div>
     </div>
   </div>
@@ -123,15 +122,15 @@
 
 <script>
 import axios from 'axios'
-import { DATA_CATE } from '@/constants/constants.js'
-import { DATA_POS } from '@/constants/constants.js'
+import { DATA_CATE, DATA_POS } from '@/constants/constants.js'
+import swal from 'sweetalert2'
 export default {
-  props: ['title'],
   name: 'New',
+  props: ['title'],
   data() {
     return {
-      CATEGORY :DATA_CATE,
-      POSITION:DATA_POS,
+      CATEGORY: DATA_CATE,
+      POSITION: DATA_POS,
       form: {
         id: '',
         title: '',
@@ -146,6 +145,11 @@ export default {
       errors: [],
     }
   },
+  mounted() {
+    if (this.$route.params.id != null) {
+      this.getBlogByID(this.$route.params.id)
+    }
+  },
   methods: {
     /**
      * create blog
@@ -156,7 +160,13 @@ export default {
         return this.errors
       } else {
         axios.post('http://localhost:4000/blogs', this.form).then((res) => {
-          alert('them thanh cong')
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Successfully Added',
+            showConfirmButton: false,
+            timer: 1500,
+          })
         })
         this.$router.push('/blog')
       }
@@ -182,7 +192,13 @@ export default {
         axios
           .put('http://localhost:4000/blogs/' + id, this.form)
           .then((res) => {
-            alert(' Sửa thành công')
+            swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Successfully Update',
+              showConfirmButton: false,
+              timer: 1500,
+            })
           })
         this.$router.push('/blog')
       }
@@ -209,11 +225,6 @@ export default {
         this.errors.push('position không được trống!')
       }
     },
-  },
-  mounted() {
-    if (this.$route.params.id != null) {
-      this.getBlogByID(this.$route.params.id)
-    }
   },
 }
 </script>
