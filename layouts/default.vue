@@ -1,21 +1,22 @@
 <template>
   <div class="container">
     <div class="header my-3">
-      <blog-header />
+      <web-header />
     </div>
     <div class="row">
-      <blog-menu/>
+      <web-menu/>
       <Nuxt />
     </div>
   </div>
 </template>
 <script>
-import BlogHeader from '../components/BlogHeader.vue'
-import BlogMenu from '../components/BlogMenu.vue'
+import WebHeader from '../components/WebHeader'
+import WebMenu from '../components/WebMenu'
 export default {
   components: {
-    BlogHeader,
-    BlogMenu,
+    WebHeader,
+    WebMenu
+   
   },
 }
 </script>

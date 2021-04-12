@@ -1,16 +1,16 @@
 <template>
-  <div class="col-lg-9" style="border-left:1px solid #bdbdbd" >
-    <list-product :dataProducts="dataProducts" @getListBlogs="getData" />
+  <div class="col-lg-9" style="border-left: 1px solid #bdbdbd">
+    <list-product :dataProducts="dataProducts" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import {URL_API} from '../constants/constants'
-import ListProduct from '../components/Products/ListProduct'
+import { URL_API } from '../../constants/constants'
+import ListProduct from '../../components/Products/ListProduct.vue'
 export default {
   components: {
-    ListProduct
+    ListProduct,
   },
   data() {
     return {
